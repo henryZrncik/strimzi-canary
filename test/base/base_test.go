@@ -14,11 +14,11 @@ import (
 
 
 const (
-	httpUrlPrefix                   = "http://localhost:8080"
-	metricsEndpoint                 = "/metrics"
-	canaryTopicName                 = "__strimzi_canary"
-	metricServerUpdateTimeInSeconds = 30
-	kafkaMainBroker = "127.0.0.1:9092"
+	httpUrlPrefix                      = "http://localhost:8080"
+	metricsEndpoint                    = "/metrics"
+	canaryTopicName                    = "__strimzi_canary"
+	metricEndpointRequestTimeout = 3
+	kafkaMainBroker                    = "127.0.0.1:9092"
 )
 
 /* test checks for following:
@@ -116,17 +116,16 @@ func TestMetricServerContentUpdating(t *testing.T) {
 		t.Errorf("Content of metric server is not updated as expected")
 	}
 
-	// test  has to wait for Defined time before next round of data producing is finished.
-	time.Sleep(time.Second * (1 + 2))
+	// test wait for period of time before sending next request
+	time.Sleep(time.Second * metricEndpointRequestTimeout)
 	resp2, _ := http.Get(httpUrlPrefix + metricsEndpoint)
 	body2, _ := ioutil.ReadAll(resp2.Body)
-
 
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
 	totalRequestCountT2 := test.ParseCountFromMetrics(string(body2))
 	if totalRequestCountT2 <= totalRequestCountT1{
-		t.Errorf("Data are not updated within requested time period %d on endpoint %s", metricServerUpdateTimeInSeconds, metricsEndpoint)
+		t.Errorf("Data are not updated within requested time period %d on endpoint %s", metricEndpointRequestTimeout, metricsEndpoint)
 	}
 
 }
