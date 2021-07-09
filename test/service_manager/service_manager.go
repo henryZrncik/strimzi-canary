@@ -28,7 +28,7 @@ type controller struct {
 
 const (
 	pathToDockerComposeImage        = "/compose-kafka-zookeeper.yaml"
-	pathToMainMethod                = "../cmd/main.go"
+	pathToMainMethod                = "../../cmd/main.go"
 )
 
 
