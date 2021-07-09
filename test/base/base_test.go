@@ -26,21 +26,21 @@ const (
 *  liveliness of topic (messages being produced),
 */
 func TestCanaryTopicLiveliness(t *testing.T) {
-	log.Println("TestCanaryTopic test startss")
+	log.Println("1TestCanaryTopic test startss")
 
 	// setting up timeout
 	timeout := time.After(40 * time.Second)
 	testDone := make(chan bool)
-
+	log.Printf("2gonna call gourutina")
 	// test itself.
 	go func() {
-
+		log.Printf("2a Go routine GOES")
 		config := sarama.NewConfig()
 		config.Consumer.Return.Errors = true
 
 		//kafka end point
 		brokers := []string{kafkaMainBroker}
-
+		log.Printf("2b len configuracky")
 		//get broker
 		cluster, err := sarama.NewConsumer(brokers, config)
 		if err != nil {
@@ -52,7 +52,7 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		if !test.IsTopicPresent(canaryTopicName, topics) {
 			t.Errorf("%s is not present", canaryTopicName)
 		}
-
+		log.Printf("2c ")
 		// consume single message
 		consumer, _ := sarama.NewConsumer(brokers, nil)
 		partitionConsumer, _ := consumer.ConsumePartition(canaryTopicName, 0, 0)
