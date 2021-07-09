@@ -128,7 +128,7 @@ func TestMetricServerContentUpdating(t *testing.T) {
 
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
-	totalRequestCountT2 := test.ParseCountFromMetrics(string(body))
+	totalRequestCountT2 := test.ParseCountFromMetrics(string(body2))
 	if totalRequestCountT2 <= totalRequestCountT1{
 		t.Errorf("Data are not updated within requested time period %d on endpoint %s", metricServerUpdateTimeInSeconds, metricsEndpoint)
 	}
