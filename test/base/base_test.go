@@ -1,8 +1,10 @@
-package test
+// +build e2e
+
+package base
 
 import (
-	"context"
-	"github.com/segmentio/kafka-go"
+	"github.com/Shopify/sarama"
+	"github.com/strimzi/strimzi-canary/test"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,7 +18,7 @@ const (
 	metricsEndpoint                 = "/metrics"
 	canaryTopicName                 = "__strimzi_canary"
 	metricServerUpdateTimeInSeconds = 30
-	kafkaServer = "localhost:9092"
+	kafkaMainBroker = "localhost:9092"
 )
 
 /* test checks for following:
@@ -28,41 +30,42 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 
 	// setting up timeout
 	timeout := time.After(40 * time.Second)
-	done := make(chan bool)
+	testDone := make(chan bool)
 
 	// test itself.
 	go func() {
-		// test topic presence
-		isPresent, err := isTopicPresent(canaryTopicName, kafkaServer)
-		if err != nil {
-			t.Errorf("cannot connect to canary topic: %s due to error %s\n",canaryTopicName, err.Error()  )
-		}
-		if ! isPresent {
-			t.Errorf("%s topic doesn't exist", canaryTopicName)
-		}
-		log.Printf("%s topic is present\n", canaryTopicName)
 
-		// test topic liveliness
-		partition := 0
-		conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", canaryTopicName, partition)
+		config := sarama.NewConfig()
+		config.Consumer.Return.Errors = true
+
+		//kafka end point
+		brokers := []string{kafkaMainBroker}
+
+		//get broker
+		cluster, err := sarama.NewConsumer(brokers, config)
 		if err != nil {
-			log.Fatal("failed to dial leader:", err)
+			t.Error(err.Error())
 		}
-		// read single message
-		log.Println("waiting for message from kafka")
-		_, err = conn.ReadMessage(10)
-		if err != nil {
-			t.Errorf("error when waiting for message from %s: %s", canaryTopicName , err.Error())
+
+		// get all topics
+		topics, _ := cluster.Topics()
+		if !test.IsTopicPresent(canaryTopicName, topics) {
+			t.Errorf("%s is not present", canaryTopicName)
 		}
-		log.Println("waiting for next message")
-		done <- true
+
+		// consume single message
+		consumer, _ := sarama.NewConsumer(brokers, nil)
+		partitionConsumer, _ := consumer.ConsumePartition(canaryTopicName, 0, 0)
+		msg := <-partitionConsumer.Messages()
+		log.Printf("Consumed: offset:%d  value:%v", msg.Offset, string(msg.Value))
+		testDone <- true
 
 	}()
 
 	select {
 	case <-timeout:
-		t.Error("Test didn't finish in time")
-	case <-done:
+		t.Error("Test didn't finish in time due to message not being read in time")
+	case <-testDone:
 		log.Println("message received")
 	}
 
@@ -101,18 +104,18 @@ func TestMetricServerContentUpdating(t *testing.T) {
 
 	resp, _ := http.Get(httpUrlPrefix + metricsEndpoint)
 	body, _ := ioutil.ReadAll(resp.Body)
-	totalRequestCountT1 := parseCountFromMetrics(string(body))
+	totalRequestCountT1 := test.ParseCountFromMetrics(string(body))
 	if len(totalRequestCountT1) < 1 {
 		t.Errorf("Content of metric server is not updated as expected")
 	}
 
 	// test  has to wait for Defined time before next round of data producing is finished.
-	time.Sleep(time.Second * (metricServerUpdateTimeInSeconds + 1))
+	time.Sleep(time.Second * (metricServerUpdateTimeInSeconds + 2))
 	resp, _ = http.Get(httpUrlPrefix + metricsEndpoint)
 	body, _ = ioutil.ReadAll(resp.Body)
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
-	totalRequestCountT2 := parseCountFromMetrics(string(body))
+	totalRequestCountT2 := test.ParseCountFromMetrics(string(body))
 	if totalRequestCountT2 <= totalRequestCountT1{
 		t.Errorf("Data are not updated within requested time period %d on endpoint %s", metricServerUpdateTimeInSeconds, metricsEndpoint)
 	}
