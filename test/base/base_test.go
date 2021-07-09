@@ -45,7 +45,7 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		log.Printf("2b len configuracky")
 		//get broker
 		cluster, err := sarama.NewConsumer(brokers, config)
-		log.Printf("nieco s cluster: %s\n",cluster != nil)
+		log.Printf("nieco s cluster: %v\n",cluster != nil)
 		log.Printf("2b1 len configuracky")
 		if err != nil {
 			t.Error(err.Error())
