@@ -2,7 +2,7 @@ name: pushPullAcceptanceTest
 
 on:
   push:
-    branches: [main, staticContainer, ]
+    branches: [main, staticContainer, githubAction]
   pull_request:
     branches: [main]
 
