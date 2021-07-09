@@ -1,4 +1,4 @@
-package base
+package test
 
 import (
 	"github.com/strimzi/strimzi-canary/test/service_manager"
