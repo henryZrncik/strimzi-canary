@@ -36,6 +36,8 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 	go func() {
 		log.Printf("2a Go routine GOES")
 		config := sarama.NewConfig()
+
+		log.Printf("config: %s\n",config.Version  )
 		config.Consumer.Return.Errors = true
 
 		//kafka end point
@@ -43,6 +45,7 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		log.Printf("2b len configuracky")
 		//get broker
 		cluster, err := sarama.NewConsumer(brokers, config)
+		log.Printf("nieco s cluster: %s\n",cluster != nil)
 		log.Printf("2b1 len configuracky")
 		if err != nil {
 			t.Error(err.Error())
