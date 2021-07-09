@@ -26,7 +26,7 @@ const (
 *  liveliness of topic (messages being produced),
 */
 func TestCanaryTopicLiveliness(t *testing.T) {
-	log.Println("TestCanaryTopic test starts")
+	log.Println("TestCanaryTopic test startss")
 
 	// setting up timeout
 	timeout := time.After(40 * time.Second)
@@ -113,6 +113,8 @@ func TestMetricServerContentUpdating(t *testing.T) {
 	time.Sleep(time.Second * (metricServerUpdateTimeInSeconds + 2))
 	resp, _ = http.Get(httpUrlPrefix + metricsEndpoint)
 	body, _ = ioutil.ReadAll(resp.Body)
+
+	time.Sleep(time.Minute * 4)
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
 	totalRequestCountT2 := test.ParseCountFromMetrics(string(body))
