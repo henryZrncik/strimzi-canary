@@ -18,7 +18,7 @@ const (
 	metricsEndpoint                 = "/metrics"
 	canaryTopicName                 = "__strimzi_canary"
 	metricServerUpdateTimeInSeconds = 30
-	kafkaMainBroker = "localhost:9092"
+	kafkaMainBroker = "127.0.0.1:9092"
 )
 
 /* test checks for following:
@@ -124,7 +124,7 @@ func TestMetricServerContentUpdating(t *testing.T) {
 	resp, _ = http.Get(httpUrlPrefix + metricsEndpoint)
 	body, _ = ioutil.ReadAll(resp.Body)
 
-	time.Sleep(time.Minute * 4)
+
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
 	totalRequestCountT2 := test.ParseCountFromMetrics(string(body))
