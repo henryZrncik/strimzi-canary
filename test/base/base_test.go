@@ -1,9 +1,10 @@
 //+build e2e
 
-package test
+package base
 
 import (
 	"github.com/Shopify/sarama"
+	"github.com/strimzi/strimzi-canary/test"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,7 +60,7 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		}
 
 		log.Printf("2c ")
-		if !IsTopicPresent(canaryTopicName, topics) {
+		if !test.IsTopicPresent(canaryTopicName, topics) {
 			t.Errorf("%s is not present", canaryTopicName)
 		}
 		log.Printf("2d ")
@@ -114,7 +115,7 @@ func TestMetricServerContentUpdating(t *testing.T) {
 
 	resp, _ := http.Get(httpUrlPrefix + metricsEndpoint)
 	body, _ := ioutil.ReadAll(resp.Body)
-	totalRequestCountT1 := ParseCountFromMetrics(string(body))
+	totalRequestCountT1 := test.ParseCountFromMetrics(string(body))
 	if len(totalRequestCountT1) < 1 {
 		t.Errorf("Content of metric server is not updated as expected")
 	}
@@ -127,7 +128,7 @@ func TestMetricServerContentUpdating(t *testing.T) {
 
 
 	// totalRequestCountT2 stores value produced after defined number of seconds from obtaining totalRequestCountT1
-	totalRequestCountT2 := ParseCountFromMetrics(string(body))
+	totalRequestCountT2 := test.ParseCountFromMetrics(string(body))
 	if totalRequestCountT2 <= totalRequestCountT1{
 		t.Errorf("Data are not updated within requested time period %d on endpoint %s", metricServerUpdateTimeInSeconds, metricsEndpoint)
 	}

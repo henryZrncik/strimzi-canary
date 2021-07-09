@@ -2,7 +2,7 @@ name: pushPullAcceptanceTest
 
 on:
   push:
-    branches: [main, staticContainer, githubAction]
+    branches: [main, staticContainer, ]
   pull_request:
     branches: [main]
 
@@ -22,4 +22,4 @@ jobs:
       - name: Test
         run: |
           cd test/
-          go test --tags=e2e
+          go test ./... --tags=e2e
