@@ -17,7 +17,7 @@ const (
 	httpUrlPrefix                      = "http://localhost:8080"
 	metricsEndpoint                    = "/metrics"
 	canaryTopicName                    = "__strimzi_canary"
-	metricEndpointRequestTimeout = 3
+	metricEndpointRequestTimeout       = 3
 	kafkaMainBroker                    = "127.0.0.1:9092"
 )
 
@@ -31,18 +31,13 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 	// setting up timeout
 	timeout := time.After(40 * time.Second)
 	testDone := make(chan bool)
-	log.Printf("2gonna call gourutina")
 	// test itself.
 	go func() {
-		log.Printf("2a Go routine GOES")
 		config := sarama.NewConfig()
-
-		log.Printf("config: %s\n",config.Version  )
 		config.Consumer.Return.Errors = true
 
 		//kafka end point
 		brokers := []string{kafkaMainBroker}
-
 		//get broker
 		cluster, err := sarama.NewConsumer(brokers, config)
 

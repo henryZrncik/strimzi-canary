@@ -67,5 +67,5 @@ func (c *controller) StartCanary() {
 	go exec.Command("go", "run",  pathToMainMethod ).Run()
 
 	// once canary starts it may take extra time to open endpoints
-	time.Sleep(time.Second * 50)
+	time.Sleep(time.Second * 20)
 }
