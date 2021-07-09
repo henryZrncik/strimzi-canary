@@ -117,7 +117,7 @@ func TestMetricServerContentUpdating(t *testing.T) {
 	}
 
 	// test  has to wait for Defined time before next round of data producing is finished.
-	time.Sleep(time.Second * (metricServerUpdateTimeInSeconds + 2))
+	time.Sleep(time.Second * (1 + 2))
 	resp2, _ := http.Get(httpUrlPrefix + metricsEndpoint)
 	body2, _ := ioutil.ReadAll(resp2.Body)
 
