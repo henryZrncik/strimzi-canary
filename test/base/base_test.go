@@ -26,6 +26,7 @@ const (
 *  liveliness of topic (messages being produced),
 */
 func TestCanaryTopicLiveliness(t *testing.T) {
+	t.Skip()
 	log.Println("1TestCanaryTopic test startss")
 
 	// setting up timeout
