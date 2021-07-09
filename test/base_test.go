@@ -1,4 +1,5 @@
-// +build e2e
+//lol
+//lol+build e2e
 
 package test
 
