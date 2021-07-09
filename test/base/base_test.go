@@ -50,7 +50,11 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		log.Printf("$$$$$$$$$$$$$$$$$$$$$$$$")
 
 		// get all topics
-		topics, _ := cluster.Topics()
+		topics, err := cluster.Topics()
+		if err != nil {
+			t.Error(err.Error())
+		}
+
 		log.Printf("2c ")
 		if !test.IsTopicPresent(canaryTopicName, topics) {
 			t.Errorf("%s is not present", canaryTopicName)
