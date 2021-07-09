@@ -26,7 +26,7 @@ const (
 *  liveliness of topic (messages being produced),
 */
 func TestCanaryTopicLiveliness(t *testing.T) {
-
+	t.Error("SALALALA")
 	log.Println("1TestCanaryTopic test startss")
 
 	// setting up timeout
@@ -122,8 +122,8 @@ func TestMetricServerContentUpdating(t *testing.T) {
 
 	// test  has to wait for Defined time before next round of data producing is finished.
 	time.Sleep(time.Second * (metricServerUpdateTimeInSeconds + 2))
-	resp, _ = http.Get(httpUrlPrefix + metricsEndpoint)
-	body, _ = ioutil.ReadAll(resp.Body)
+	resp2, _ := http.Get(httpUrlPrefix + metricsEndpoint)
+	body2, _ := ioutil.ReadAll(resp2.Body)
 
 
 
