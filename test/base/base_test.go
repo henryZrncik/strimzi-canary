@@ -47,7 +47,7 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 		if err != nil {
 			t.Error(err.Error())
 		}
-		log.Printf("2b2 len configuracky")
+		log.Printf("$$$$$$$$$$$$$$$$$$$$$$$$")
 
 		// get all topics
 		topics, _ := cluster.Topics()
