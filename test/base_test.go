@@ -1,5 +1,4 @@
-//lol
-//lol+build e2e
+//+build e2e
 
 package test
 
@@ -83,7 +82,6 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 }
 
 func TestEndpointsAvailability(t *testing.T) {
-	time.Sleep(time.Minute * 2)
 	log.Println("TestEndpointsAvailability test starts")
 	var testInputs = [...]struct{
 		endpoint           string
