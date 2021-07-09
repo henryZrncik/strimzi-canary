@@ -49,10 +49,11 @@ func TestCanaryTopicLiveliness(t *testing.T) {
 
 		// get all topics
 		topics, _ := cluster.Topics()
+		log.Printf("2c ")
 		if !test.IsTopicPresent(canaryTopicName, topics) {
 			t.Errorf("%s is not present", canaryTopicName)
 		}
-		log.Printf("2c ")
+		log.Printf("2d ")
 		// consume single message
 		consumer, _ := sarama.NewConsumer(brokers, nil)
 		partitionConsumer, _ := consumer.ConsumePartition(canaryTopicName, 0, 0)
