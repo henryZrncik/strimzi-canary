@@ -30,7 +30,7 @@ type Paths struct {
 }
 
 const (
-	canaryTestTopicName      = "__strimzi_canary_test3"
+	canaryTestTopicName      = "__strimzi_canary"
 	kafkaBrokerAddress       = "127.0.0.1:9092"
 	canaryRetentionTime      = "1000"
 
@@ -72,8 +72,8 @@ func (c *ServiceManager) StartCanary() {
 	log.Println("Starting Canary")
 	c.setUpCanaryParamsViaEnv()
 	myCmd := exec.Command("go", "run",  c.pathToCanaryMain )
-	//myCmd.Stdout = os.Stdout
-	//myCmd.Stderr = os.Stderr
+	myCmd.Stdout = os.Stdout
+	myCmd.Stderr = os.Stderr
 
 	if err := myCmd.Start(); err != nil {
 		log.Fatal(err.Error())
