@@ -2,7 +2,7 @@ name: acceptancetest
 
 on:
   push:
-    branches: [main]
+    branches: [main, dd]
   pull_request:
     branches: [main]
 
