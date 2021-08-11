@@ -2,9 +2,11 @@ name: acceptancetest
 
 on:
   push:
-    branches: [main, verify-actions]
+    branches:
+      - "main"
   pull_request:
-    branches: [main]
+    branches:
+      - "*"
 
 jobs:
 
